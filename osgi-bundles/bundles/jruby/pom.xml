@@ -195,7 +195,39 @@
                             javax.security.auth;
                             javax.security.auth.*;
                             javax.security.auth.x500;
-                            javax.security.auth.x500.*;resolution:=optional
+                            javax.security.auth.x500.*;resolution:=optional,
+                            <!-- nokogiri -->
+                            javax.xml;
+                            javax.xml.namespace;
+                            javax.xml.parsers;
+                            javax.xml.validation;
+                            javax.xml.stream;
+                            javax.xml.stream.events;
+                            javax.xml.stream.util;
+                            javax.xml.transform;
+                            javax.xml.transform.dom;
+                            javax.xml.transform.sax;
+                            javax.xml.transform.stax;
+                            javax.xml.transform.stream;
+                            javax.xml.xpath;
+                            org.w3c.dom;
+                            org.w3c.dom.events;
+                            org.w3c.dom.ls;
+                            <!--
+                            [litle-plugin] Failure in add_payment_method: org/w3c/dom/traversal/TreeWalker
+                            org.apache.xerces.jaxp.DocumentBuilderImpl.newDocument(Unknown Source)
+                            nokogiri.XmlDocument.createNewDocument(XmlDocument.java:233)
+                            nokogiri.XmlDocument.rbNew(XmlDocument.java:249)
+                            nokogiri.XmlDocument$INVOKER$s$0$0$rbNew.call(XmlDocument$INVOKER$s$0$0$rbNew.gen)
+                            -->
+                            <!-- org.w3c.dom.traversal; -->
+                            org.w3c.dom.*;resolution:=optional,
+                            org.xml.sax;
+                            org.xml.sax.ext;
+                            org.xml.sax.helpers;
+                            <!-- recent nokogiri also uses these :
+                            com.sun.org.apache.xml.internal;
+                            com.sun.org.apache.xpath.internal; -->
                         </Import-Package>
                     </instructions>
                 </configuration>
