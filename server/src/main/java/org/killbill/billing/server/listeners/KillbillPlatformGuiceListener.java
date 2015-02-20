@@ -163,18 +163,24 @@ public class KillbillPlatformGuiceListener extends GuiceServletContextListener {
     }
 
     protected void initializeMetrics(final ServletContextEvent event) {
-
         final MetricRegistry metricRegistry = injector.getInstance(MetricRegistry.class);
-        final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
-        final ch.qos.logback.classic.Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-        final InstrumentedAppender metrics = new InstrumentedAppender(metricRegistry);
-        metrics.setContext(root.getLoggerContext());
-        metrics.start();
-        root.addAppender(metrics);
+        final Object factory = LoggerFactory.getILoggerFactory();
 
-        event.getServletContext().setAttribute(HealthCheckServlet.HEALTH_CHECK_REGISTRY, injector.getInstance(HealthCheckRegistry.class));
+        if ( factory.getClass().getName().equals("ch.qos.logback.classic.LoggerContext") ) {
+            final ch.qos.logback.classic.Logger root = ((LoggerContext) factory).getLogger(Logger.ROOT_LOGGER_NAME);
+
+            final InstrumentedAppender metrics = new InstrumentedAppender(metricRegistry);
+            metrics.setContext(root.getLoggerContext());
+            metrics.start();
+            root.addAppender(metrics);
+        }
+        else {
+            logger.info("{} not a logback logger factory {} not started", factory, metricRegistry);
+        }
+
         event.getServletContext().setAttribute(MetricsServlet.METRICS_REGISTRY, metricRegistry);
+        event.getServletContext().setAttribute(HealthCheckServlet.HEALTH_CHECK_REGISTRY, injector.getInstance(HealthCheckRegistry.class));
     }
 
     protected void registerEhcacheMBeans() {
